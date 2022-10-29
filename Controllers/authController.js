@@ -37,7 +37,7 @@ exports.login= async(req, res, next)=>{
 
         const admin= await Admin.findOne({email}).select('+password')
 
-        if (!admin || !(await admin.correctPassword(password, user.password))){
+        if (!admin || !(await admin.correctPassword(password, admin.password))){
             return next(new AppError('Wrong password', 400))
         }
 

@@ -11,10 +11,23 @@ const adminSchema= new mongoose.Schema({
         type: String,
         required: [true, 'please what is your name']
     },
-    options:{
+    password: {
         type: String,
-        enum:['joiner', 'interested in partenership', 'want to stay in touch']
-    }
+        minlength: 8,
+        select: false,
+        required:[true, 'input your password']
+    }, 
+    confirmPassword: {
+        type: String,
+        required: [true, 'Please confirm your password'],
+        validate: {
+          // This only works on CREATE and SAVE!!!
+          validator: function(el) {
+            return el === this.password;
+          },
+          message: 'Passwords are not the same!'
+        }
+      }
 });
 
 
