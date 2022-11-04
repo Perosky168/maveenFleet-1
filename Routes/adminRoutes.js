@@ -7,7 +7,7 @@ const router= express.Router();
 
 router.route('/sign-up').post(adminController.createAdmin)
 router.route('/login').post(authController.login)
-router.route('/analytics').get(adminController.googleAnalytics)
+router.route('/analytics').get(adminController.analyticsLog)
 
 
 module.exports= router;
