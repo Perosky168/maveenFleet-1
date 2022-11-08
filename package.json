@@ -4,8 +4,17 @@
   "description": "up coming dev apps",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start-dev": "nodemon server.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=60000",
+    "pretest": "cross-env NODE_ENV=test npm run migrate:reset"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "author": "Adekunle, Tobiloba, Peter",
   "license": "ISC",
@@ -20,6 +29,10 @@
     "mongoose": "^6.7.0",
     "path": "^0.12.7",
     "request": "^2.88.2",
+    "sequelize-cli": "^6.5.2",
     "supertest": "^6.3.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

@@ -7,14 +7,13 @@ const private_key= "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAAS
 
 const jwt= new google.auth.JWT(client_email, null, private_key.replace(/\\n/g, "\n"),scopes)
 
-console.log(process.env.PRIVATE_KEY)
 
 exports.createAdmin= async(req, res, next)=>{
         const admin= await User.create(req.body)
 
         if(!admin) return next(new(AppError('something went wrong', 400)))
 
-        res.status(200).json({
+        res.status(201).json({
             status: 'success',
             data: admin
         })
