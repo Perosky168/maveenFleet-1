@@ -6,7 +6,7 @@ const app = require('../app')
 // const createAdmin= jest.fn()
 
 describe('Post Endpoints', () => {
-  it('should create a new post', async () => {
+  it('should return a 400 statusCode', async () => {
     const res = await request(app)
       .post('/api/v1/admin/login')
       .send({
