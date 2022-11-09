@@ -5,7 +5,8 @@ const crypto= require('crypto')
 const adminSchema= new mongoose.Schema({
     email:{
         type: String,
-        required: [true, 'provide a valid e-mail addresss']
+        required: [true, 'provide a valid e-mail addresss'],
+        unique:true
     },
     name: {
         type: String,
@@ -17,6 +18,7 @@ const adminSchema= new mongoose.Schema({
         select: false,
         required:[true, 'input your password']
     }, 
+    role: String,
     confirmPassword: {
         type: String,
         required: [true, 'Please confirm your password'],
@@ -32,6 +34,7 @@ const adminSchema= new mongoose.Schema({
 
 
 adminSchema.pre('save', async function(next){
+    this.role= 'admin'
     if(!this.isModified('password')) return next();
 
     this.password= await bcrypt.hash(this.password, 12);

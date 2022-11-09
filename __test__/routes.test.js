@@ -1,16 +1,20 @@
 const request = require('supertest')
 const app = require('../app')
 
+// const jest= require('jest')
+
+// const createAdmin= jest.fn()
+
 describe('Post Endpoints', () => {
   it('should create a new post', async () => {
     const res = await request(app)
-      .post('/api/v1/admin/sign-up')
+      .post('/api/v1/admin/login')
       .send({
-        userId: 1,
-        title: 'test is cool',
+        password: 'kunle1374',
+        confirmPassword:'kunle1374'
       })
-    expect(res.statusCode).toEqual(201)
-    expect(res.body).toHaveProperty('post')
+
+    expect(res.statusCode).toEqual(400)
   })
 })
 

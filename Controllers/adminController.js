@@ -1,4 +1,5 @@
-const User= require('../Models/adminModel')
+const Admin= require('../Models/adminModel')
+const User= require('../Models/userModel')
 const AppError= require('../utils/appError')
 const google= require('googleapis')
 const scopes= 'https://www.googleapis.com/auth/analytics.readonly'
@@ -9,7 +10,7 @@ const jwt= new google.auth.JWT(client_email, null, private_key.replace(/\\n/g, "
 
 
 exports.createAdmin= async(req, res, next)=>{
-        const admin= await User.create(req.body)
+        const admin= await Admin.create(req.body)
 
         if(!admin) return next(new(AppError('something went wrong', 400)))
 
@@ -21,6 +22,27 @@ exports.createAdmin= async(req, res, next)=>{
     
 };
 
+exports.getAllUSers= async(req, res, next)=>{
+  try{
+    const users= await User.find();
+
+    if(!users){
+      res.status(400).json({
+        status: 'fail',
+        error: users
+      })
+    }
+  
+
+    res.status(200).json({
+      status: "success",
+      data: users
+    })
+
+  }catch(err){
+    console.log(err)
+  }
+}
 
 exports.analyticsLog= async(req, res, next)=>{
   try{
