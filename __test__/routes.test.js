@@ -1,22 +1,51 @@
 const request = require('supertest')
-const app = require('../app')
+const server = require('../utils/server')
+const {MongoMemoryServer}= require('mongodb-memory-server')
+const mongoose= require('mongoose')
+const User= require('../Models/userModel')
+const { login } = require('../Controllers/authController')
 
-// const jest= require('jest')
+const app= server()
 
-// const createAdmin= jest.fn()
+const userId= new mongoose.Types.ObjectId().toString();
 
-describe('Post Endpoints', () => {
-  it('should return a 400 statusCode', async () => {
-    const res = await request(app)
-      .post('/api/v1/admin/login')
-      .send({
-        password: 'kunle1374',
-        confirmPassword:'kunle1374'
-      })
+const user= {
+    id: userId,
+    name: "kolu fewo",
+    email: "ades@email.com",
+    password: "kunle1374",
+    confirmPassword: "kunle1374"
+}
 
-    expect(res.statusCode).toEqual(400)
-  })
-})
+describe('get users route', ()=>{
+    beforeAll(async()=>{
+       const monogServer= await MongoMemoryServer.create();
+       await mongoose.connect(monogServer.getUri())
+    });
 
+    afterAll(async ()=>{
+        await mongoose.disconnect();
+        await mongoose.connection.close();
+    });
 
+    describe('get user route', ()=>{
+        describe("give a user doesn't exist",()=>{
+        it('should return a 200 statusCode', async()=>{
+            const newUser= await User.create(user)  
+            const{body, statusCode}= await request(app).get(`/api/v1/user/${newUser.id}`)
 
+            expect(statusCode).toBe(200)
+            expect(body.id).toBe(newUser.id)
+        })
+    });
+
+     });
+});
+
+// describe('sign-up admin route', ()=>{
+//      describe('given admin is not logged in', ()=>{
+//         it('should return a 403',async()=>{
+//             const{statusCode}= await request(app).post('/api/v1/all-users')
+//             expect(statusCode).toBe(403)
+//         })
+// })

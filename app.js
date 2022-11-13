@@ -17,7 +17,7 @@ app.use((req,res,next)=>{
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/v1/admin', adminRouter)
+app.use('/api/v1', adminRouter)
 
 app.all('*', (req, res, next)=>{
     next(new AppError(`Page ${req.originalUrl} is not found`, 404));

@@ -40,7 +40,7 @@ exports.protect= catchAsync(async (req, res, next)=>{
             const currentUser= await Admin.findById(decoded.id);  
 
             if(!currentUser){
-                return (next(new AppError('Login again', 404)))
+                return (next(new AppError('Login again', 400)))
             };
 
             //check if user changed password after the token was issued
