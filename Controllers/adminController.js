@@ -48,7 +48,7 @@ exports.getAllUSers= async(req, res, next)=>{
 exports.getOneUser= catchAsync(async(req, res, next)=>{
       const user = await User.findById(req.params.id)
 
-      if(!user) next(new AppError('no user with this Id', 404))
+      if(!user) return next(new AppError('no user with this Id', 404))
 
       res.status(200).json({
         status: 'success',
