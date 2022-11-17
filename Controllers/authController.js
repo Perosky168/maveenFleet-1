@@ -16,8 +16,15 @@ const createSendToken = (user, statusCode, req, res) => {
 
     res.cookie('secretoken', token, {
         httpOnly: true,
-        secure: req.secure
-    })
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    });
+
+    //saving username and Id in session
+    req.session.user_name= user.name
+    req.session.user_id= user._id
+    req.session.email= user.email
+    //Removing password from output
+    user.password= undefined
 
     res.status(statusCode).json({
         status: 'success',
@@ -28,40 +35,50 @@ const createSendToken = (user, statusCode, req, res) => {
     });
 };
 
-exports.protect= catchAsync(async (req, res, next)=>{
-    if(req.cookies){
-            // verify if token is real
-            const decoded= await promisify(jwt.verify)(
-                req.cookies.secretoken,
-                process.env.JWT_SECRET
-            );
-
-            // check if user still exists
-            const currentUser= await Admin.findById(decoded.id);  
-
-            if(!currentUser){
-                return (next(new AppError('Login again', 400)))
-            };
-
-            //check if user changed password after the token was issued
-
-            if(currentUser.changedPasswordAfter(decoded.iat)){
-                return (next(new AppError('password has been changed please login again', 400)))
-            }
-
-            //if all these are coditions are met then there is a logged in user, therfore store user info in locals
-            req.user= currentUser
-            res.locals.user= currentUser
-
-
-            //Allow next middleware
-            return next();
+exports.protect = catchAsync(async (req, res, next) => {
+    // 1) Getting token and check of it's there
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.secretoken) {
+      token = req.cookies.secretoken;
     }
-    //Else if there are no saved cookies, user isnt logged in
-    next(new AppError('user is not logged in', 400))
-
-});
-
+  
+    if (!token) {
+      return next(
+        new AppError('You are not logged in! Please log in to get access.', 401)
+      );
+    }
+  
+    // 2) Verification token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  
+    // 3) Check if user still exists
+    const currentUser = await Admin.findById(decoded.id);
+    if (!currentUser) {
+      return next(
+        new AppError(
+          'The user belonging to this token does no longer exist.',
+          401
+        )
+      );
+    }
+  
+    // 4) Check if user changed password after the token was issued
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('User recently changed password! Please log in again.', 401)
+      );
+    }
+  
+    // GRANT ACCESS TO PROTECTED ROUTE
+    req.user = currentUser;
+    res.locals.user = currentUser;
+    next();
+  });
 
 exports.login = async (req, res, next) => {
     const { email, password } = req.body;

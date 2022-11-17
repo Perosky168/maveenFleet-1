@@ -23,6 +23,25 @@ exports.createAdmin= async(req, res, next)=>{
     
 };
 
+
+exports.updateAdmin= async(req, res, next)=>{
+  const admin = await Admin.findByIdAndUpdate(req.User._id, req.body, {
+    new: true, 
+    runValidators: true
+  });
+
+  if(!admin){
+    return next(new AppError('wrong Id', 404))
+  };
+
+  res.status(200).json({
+    status: 'success',
+    data: admin
+  })
+}
+
+
+
 exports.getAllUSers= async(req, res, next)=>{
   try{
     const users= await User.find();
