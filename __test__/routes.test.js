@@ -1,18 +1,24 @@
 const request = require('supertest')
-const server = require('../utils/server')
-const {MongoMemoryServer}= require('mongodb-memory-server')
 const mongoose= require('mongoose')
 const app= require('../app')
 const dotenv= require('dotenv')
-
+const jwt = require('jsonwebtoken')
 dotenv.config({path: './config.env'});
+
+const privateKey= process.env.JWT_SECRET
 
 const DB= process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
 
+const mockAdmin= {
+    "_id": "636b487e6ba4e7b083d2afd4",
+    "email": "adekunle.olanipekun.ko@gmail.com",
+    "name": "Olanipekun Adkeunle",
+    "password": "$2b$12$U7Lzmy9edt14JGO3GHZrtesQasGkyXBiq6na0Ce7AW08NvpJJc7Lm",
+    "role": "admin",
+    "__v": 0
+  };
 
-const userId= new mongoose.Types.ObjectId().toString();
-
-describe('get users route', ()=>{
+describe('admin route testing', ()=>{
     beforeAll(() => {
         mongoose.connect(DB, {
             useNewUrlParser:true,
@@ -20,6 +26,12 @@ describe('get users route', ()=>{
         }).then(()=> console.log('DB connection successful'))     
       });
 
+    afterAll(async ()=>{
+        await mongoose.disconnect();
+        await mongoose.connection.close()
+    })
+
+    //Signup test
     describe('signing up admin', ()=>{
         describe('sucessful sign-up', ()=>{
             it('signing up correctly', async()=>{
@@ -34,19 +46,12 @@ describe('get users route', ()=>{
                 expect(statusCode).toBe(201)
             })
         })
-    })
+    });
       
+    //Authentication test 
+    
     describe('loging in admin', ()=>{
         describe('testing log in', ()=>{
-
-            //Login the admin if the correct details was given       
-            it('should send 200 statusCode and login the user', async()=>{                
-                const {body, statusCode} = await request(app).post('/api/v1/admin/login').send({
-                    "email": "adekunle.olanipekun.ko@gmail.com",
-                    "password": "kunle1374"
-                });
-            expect(statusCode).toBe(200)
-            });
 
             //Testing if wrong email or password was provided. 
             it('send 400 statusCode for wrong user name or password', async()=>{
@@ -56,6 +61,21 @@ describe('get users route', ()=>{
                 });
                 expect(statusCode).toBe(400)
             })
+
+            //Login the admin if the correct details was given       
+            it('should send 200 statusCode and login the user', async()=>{  
+
+                const {body, statusCode} = await request(app).post('/api/v1/admin/login')
+                .send({
+                    "email": "adekunle.olanipekun.ko@gmail.com",
+                    "password": "kunle1374"
+                });
+
+
+            expect(statusCode).toBe(200)
+            });
+
+
         })
     })
 
