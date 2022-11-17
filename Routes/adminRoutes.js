@@ -13,5 +13,6 @@ router.route('/admin/login').post(authController.login)
 router.route('/analytics').get(adminController.analyticsLog)
 router.route('/all-users').get(adminController.getAllUSers)
 router.route('/user/:id').get(adminController.getOneUser)
+router.route('update-admin').get(adminController.updateAdmin)
 
 module.exports= router;
