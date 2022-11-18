@@ -11,34 +11,53 @@ const jwt= new google.auth.JWT(client_email, null, private_key.replace(/\\n/g, "
 
 
 exports.createAdmin= async(req, res, next)=>{
-        const admin= await Admin.create(req.body)
+    try{
+      const admin= await Admin.create(req.body)
 
-        if(!admin) return next(new(AppError('something went wrong', 400)))
+      if(!admin) return next(new(AppError('something went wrong', 400)))
 
-        res.status(201).json({
-            status: 'success',
-            data: admin
-        })
+      res.status(201).json({
+          status: 'success',
+          data: admin
+      })
 
+    }catch(err){
+      res.status(409).json({
+        status: 'fail',
+        error: err
+      })
+    }
     
 };
 
 
-exports.updateAdmin= async(req, res, next)=>{
-  const admin = await Admin.findByIdAndUpdate(req.User._id, req.body, {
-    new: true, 
-    runValidators: true
-  });
+exports.updateAdmin= catchAsync(async(req, res, next)=>{
+    if(req.body.password||req.body.confirmPassword){
+      return next(new AppError('wrong route to update password', 400))
+    };
 
-  if(!admin){
-    return next(new AppError('wrong Id', 404))
-  };
+    const admin = await Admin.findByIdAndUpdate(req.user.id, req.body, {
+      new: true, 
+      runValidators: true
+    });
+
+    if(!admin) return next(new AppError('error', 400))
+
+    res.status(200).json({
+      status: 'success',
+      data: admin
+    });
+
+});
+
+exports.deleteAdmin= catchAsync(async(req, res, next)=>{
+  await Admin.findByIdAndDelete(req.params.id);
 
   res.status(200).json({
-    status: 'success',
-    data: admin
+    status: 'sucess'
   })
-}
+})
+
 
 
 
