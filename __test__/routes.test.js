@@ -3,6 +3,8 @@ const mongoose= require('mongoose')
 const app= require('../app')
 const dotenv= require('dotenv')
 const jwt = require('jsonwebtoken')
+const authController= require('../Controllers/authController');
+
 dotenv.config({path: './config.env'});
 
 const privateKey= process.env.JWT_SECRET
@@ -31,25 +33,7 @@ describe('admin route testing', ()=>{
         await mongoose.connection.close()
     })
 
-    //Signup test
-    describe('signing up admin', ()=>{
-        describe('sucessful sign-up', ()=>{
-            it('signing up correctly', async()=>{
-                const {body, statusCode}= await request(app)
-                .post('/api/v1/admin/sign-up')
-                .send({
-                        "name": "Akinpelu Tobiloba",
-                        "email": "akinpelu@gmail.com",
-                        "password": "kunle1374",
-                        "confirmPassword": "kunle1374"
-                    })
-                expect(statusCode).toBe(201)
-            })
-        })
-    });
       
-    //Authentication test 
-    
     describe('loging in admin', ()=>{
         describe('testing log in', ()=>{
 
@@ -79,14 +63,53 @@ describe('admin route testing', ()=>{
         })
     })
 
+    describe('signing up admin', ()=>{
+        describe('sucessful sign-up', ()=>{
+            it('signing-up admin and deleting admin', async()=>{
+                const {body, statusCode}= await request(app)
+                .post('/api/v1/admin/sign-up')
+                .send({
+                        "name": "Akinpelu Tobiloba",
+                        "email": "akinpelu@gmail.com",
+                        "password": "kunle1374",
+                        "confirmPassword": "kunle1374"
+                    })
+
+                console.log(body)
+                const {statusCode:deleteStatus}= await request(app).delete(`/api/v1/admin/delete/${body.data._id}`)
+
+                expect(statusCode).toBe(201)
+                expect(deleteStatus).toBe(200)
+
+            })
+        })
+    });
+
+    
     //Testing the users valid Id
 
     describe('get user route', ()=>{
         describe("give a user doesn't exist",()=>{
         it('should return a 404 statusCode if there is no user with this id', async()=>{
             const fakeUser= '636f2ecd4e497fc31864b6f3'
-            const{body, statusCode}= await request(app).get(`/api/v1/user/${fakeUser}`)
+            const {statusCode: loginStatus}=  await request(app).post('/api/v1/admin/login')
+            .send({
+                "email": "adekunle.olanipekun.ko@gmail.com",
+                "password": "kunle1374"
+            });
+        const protect= (callback)=>{
+            callback
+            }
+        const mock= jest.fn(authController.protect)
 
+        protect(mockCall)
+        
+            
+
+            const{body, statusCode}= await request(app).get(`/api/v1/user/${fakeUser}`);
+
+            expect(loginStatus).toBe(200);
+            expect(mockCall).toHaveBeenCalled();
             expect(statusCode).toBe(404)
         })
 

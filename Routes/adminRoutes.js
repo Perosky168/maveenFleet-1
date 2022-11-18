@@ -13,6 +13,7 @@ router.route('/admin/login').post(authController.login)
 router.route('/analytics').get(adminController.analyticsLog)
 router.route('/all-users').get(adminController.getAllUSers)
 router.route('/user/:id').get(adminController.getOneUser)
-router.route('update-admin').get(adminController.updateAdmin)
+router.route('/admin/update-profile').patch(adminController.updateAdmin)
+router.route('/admin/delete/:id').delete(adminController.deleteAdmin)
 
 module.exports= router;

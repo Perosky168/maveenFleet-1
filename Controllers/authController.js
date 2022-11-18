@@ -12,8 +12,8 @@ const signToken = id => {
 };
 
 const createSendToken = (user, statusCode, req, res) => {
+  try{
     const token = signToken(user._id);
-
     res.cookie('secretoken', token, {
         httpOnly: true,
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
@@ -33,7 +33,15 @@ const createSendToken = (user, statusCode, req, res) => {
             user
         }
     });
-};
+
+  }catch(err){
+    console.log(err)
+      res.status(500).json({
+        status: 'fail', 
+        error: err.Error
+      })
+    }
+  };
 
 exports.protect = catchAsync(async (req, res, next) => {
     // 1) Getting token and check of it's there
