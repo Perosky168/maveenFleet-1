@@ -8,6 +8,7 @@
     "start-dev": "nodemon server.js"
   },
   "jest": {
+    "testTimeout": 50000,
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"
