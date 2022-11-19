@@ -2,12 +2,9 @@ const request = require('supertest')
 const mongoose= require('mongoose')
 const app= require('../app')
 const dotenv= require('dotenv')
-const jwt = require('jsonwebtoken')
 const authController= require('../Controllers/authController');
 
 dotenv.config({path: './config.env'});
-
-const privateKey= process.env.JWT_SECRET
 
 const DB= process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
 
@@ -28,8 +25,6 @@ function forEach(items, callback) {
       callback(items[index]);
     }
   };
-
-
 
 
 beforeAll(() => {
@@ -93,11 +88,6 @@ describe('admin route testing', ()=>{
         it('should return a 404 statusCode if there is no user with this id', async()=>{
             const fakeUser= '636f2ecd4e497fc31864b6f3'
             
-
-            const login= jest.spyOn(authController, 'login')
-            .mockReturnValueOnce(loginDetails);
-
-            
             const{body, statusCode}= await request(app).get(`/api/v1/user/${fakeUser}`);
 
             expect(statusCode).toBe(404)
@@ -111,12 +101,12 @@ describe('admin route testing', ()=>{
             expect(body.data._id).toBe(user)
         });
 
-        it('testing a call back function', ()=>{
-            const mockCallback= jest.fn(authController.protect)
-            forEach([0, 1], mockCallback);
+        // it('testing a call back function', ()=>{
+        //     const mockCallback= jest.fn(authController.protect)
+        //     forEach([0, 1], mockCallback);
 
-            expect(mockCallback.mock.calls.length).toBe(2);
-        })
+        //     expect(mockCallback.mock.calls.length).toBe(2);
+        // })
 
     });
 
