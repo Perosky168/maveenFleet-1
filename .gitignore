@@ -1,6 +1,2 @@
 node_modules/
-mavengoogle.json/
-config/
-Controllers/testController.js
-__test__/sum.js
 *.env

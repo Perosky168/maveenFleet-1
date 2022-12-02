@@ -33,6 +33,7 @@
     "mongodb-memory-server": "^8.10.0",
     "mongoose": "^6.7.0",
     "path": "^0.12.7",
+    "pug": "^3.0.2",
     "request": "^2.88.2",
     "sequelize-cli": "^6.5.2",
     "supertest": "^6.3.1",

@@ -26,8 +26,17 @@ app.use(session({secret: 'adekunlesessionsecretdonttryitatall'}));
 //implementing body parser to reead req.body
 app.use(bodyParser.json());
 
+//setting up pug 
+
+app.engine('pug', require('pug').__express)
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'))
+
 //serving static files
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 //set security HTTP headers
 app.use(helmet())
