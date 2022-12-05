@@ -1,8 +1,11 @@
 const request = require('supertest')
 const mongoose= require('mongoose')
 const app= require('../app')
-const dotenv= require('dotenv')
-const authController= require('../Controllers/authController');
+const dotenv= require('dotenv');
+const login= require('./login');
+const {mockAxios}= require('axios');
+
+
 
 dotenv.config({path: './config.env'});
 
@@ -70,7 +73,7 @@ describe('admin route testing', ()=>{
                 const {body, statusCode}= await request(app)
                 .post('/api/v1/admin/sign-up')
                 .send(signupDetails)
-
+                console.log(body)
                 const {statusCode:deleteStatus}= await request(app).delete(`/api/v1/admin/delete/${body.data._id}`)
 
                 expect(statusCode).toBe(201)
@@ -87,10 +90,18 @@ describe('admin route testing', ()=>{
         describe("give a user doesn't exist",()=>{
         it('should return a 404 statusCode if there is no user with this id', async()=>{
             const fakeUser= '636f2ecd4e497fc31864b6f3'
-            
+
+            mockAxios.get.mockImplementationOnce(()=> Promise.resolve({
+                data: {results: ["cat.jpg"]}
+                
+            })) 
+
+            // const acceptes
+
             const{body, statusCode}= await request(app).get(`/api/v1/user/${fakeUser}`);
 
             expect(statusCode).toBe(404)
+            expect(mockAxios.get).toHaveBeenCalled()
         })
 
         it('should return a 200 statusCode and a data', async()=>{
