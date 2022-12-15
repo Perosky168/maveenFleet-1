@@ -1,3 +1,4 @@
+const authController= require('../Controllers/authController')
 const Admin= require('../Models/adminModel')
 const User= require('../Models/userModel')
 const AppError= require('../utils/appError')
@@ -63,6 +64,8 @@ exports.deleteAdmin= catchAsync(async(req, res, next)=>{
 
 exports.getAllUSers= async(req, res, next)=>{
   try{
+    authController.protect
+    // authController.restrictTo('admin')
     const users= await User.find();
 
     if(!users){
@@ -84,6 +87,8 @@ exports.getAllUSers= async(req, res, next)=>{
 }
 
 exports.getOneUser= catchAsync(async(req, res, next)=>{
+      // authController.protect()
+      // authController.restrictTo('admin')
       const user = await User.findById(req.params.id)
 
       if(!user) return next(new AppError('no user with this Id', 404))
