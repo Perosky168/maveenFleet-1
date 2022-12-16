@@ -8,7 +8,7 @@ module.exports = class Email {
         this.to = user.email;
         this.name= user.firstName;
         this.url = url;
-        this.from = `maveenFleet <${process.env.EMAIL_FROM}>`; 
+        this.from = `mooveX <${process.env.EMAIL_FROM}>`; 
     }
 
     newTransport(){
@@ -56,19 +56,7 @@ module.exports = class Email {
     }
 
     async sendWelcome(){
-        await this.send('welcome', 'Welcome to mooveX')
+        await this.send('welcome', 'Welcome to mavenFleet')
     }
-
-    async sendPasswordReset(){
-        await this.send('passwordReset',
-            `click the button below, Your password reset token is valid for only 10 minutes \n
-            if you did not request to change password ignore this`
-        )
-    }
-
-    async sendPasswordChanged(){
-        await this.send('passwordChanged', 'Your Password has been changed sucessfully')
-
-    };
 
 }
