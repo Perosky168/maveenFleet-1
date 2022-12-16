@@ -10,6 +10,7 @@ const helmet= require('helmet')
 const rateLimit= require('express-rate-limit')
 const xss= require('xss-clean')
 const mongoSanitize= require('express-mongo-sanitize')
+const userRouter= require('./Routes/userRoutes')
 
 const app= express();
 app.use(cookieParser())
@@ -61,7 +62,7 @@ app.use(xss())
 
 //routes
 app.use('/api/v1', adminRouter)
-
+app.use('/api/v2/visitors', userRouter)
 //handling unexisting page
 app.all('*', (req, res, next)=>{
     next(new AppError(`Page ${req.originalUrl} is not found`, 404));
