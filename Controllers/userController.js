@@ -30,4 +30,12 @@ exports.updateUser= catchAsync(async(req, res, next)=>{
         data: newUser
     })
 
-})
+});
+
+exports.deleteUser= catchAsync(async(req, res, next)=>{
+    await User.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+        status: 'succesful'
+    })
+});
