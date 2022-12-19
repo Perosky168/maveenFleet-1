@@ -1,4 +1,5 @@
 const authController= require('../Controllers/authController')
+const APIFeatures= require('../utils/apiFeatures')
 const Admin= require('../Models/adminModel')
 const User= require('../Models/userModel')
 const AppError= require('../utils/appError')
@@ -62,29 +63,29 @@ exports.deleteAdmin= catchAsync(async(req, res, next)=>{
 
 
 
-exports.getAllUSers= async(req, res, next)=>{
-  try{
-    authController.protect
-    // authController.restrictTo('admin')
-    const users= await User.find();
+exports.getAllUsers= catchAsync(async (req, res, next) => {
+    // To allow for nested GET reviews on tour (hack)
+    let filter = {};
+    if (req.params.Id) filter = { user: req.params.Id };
 
-    if(!users){
-      res.status(400).json({
-        status: 'fail',
-        error: users
-      })
-    }
-  
+    const features = new APIFeatures(User.find(filter), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    // const doc = await features.query.explain();
+    const doc = await features.query;
 
+    // SEND RESPONSE
     res.status(200).json({
-      status: "success",
-      data: users
-    })
+      status: 'success',
+      results: doc.length,
+      data: {
+        data: doc
+      }
+    });
+  });
 
-  }catch(err){
-    console.log(err)
-  }
-}
 
 exports.getOneUser= catchAsync(async(req, res, next)=>{
       // authController.protect()
