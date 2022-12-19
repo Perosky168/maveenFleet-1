@@ -2,7 +2,7 @@ const request = require('supertest')
 const mongoose= require('mongoose')
 const app= require('../app')
 const dotenv= require('dotenv');
-const express= require('express');
+const Email= require('../utils/email')
 
 
 dotenv.config({path: './config.env'});
@@ -36,6 +36,12 @@ describe('admin and user testing', ()=>{
             useNewUrlParser:true,
             useUnifiedTopology: true
         }).then(()=> console.log('DB connection successful'));
+
+        jest.mock(Email, ()=>{
+            return jest.fn().mockImplementation(()=>{
+                return ('fake mail sent')
+            })
+        })
 
         // .mockImplementation(()=>{
         //     return 'fake logged in'
