@@ -6,7 +6,8 @@ exports.signUp = catchAsync(async (req, res, next)=>{
         
     const user= await User.create(req.body);
     const url= `${req.protocol}://${req.get('host')}/`
-    // await new Email(user, url).sendWelcome()
+    
+    await new Email(user, url).sendWelcome()
     
     req.session.user_name= user.name
     req.session.user_id= user._id
