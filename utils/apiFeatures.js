@@ -24,7 +24,7 @@ class APIFeatures {
           this.query= this.query.sort(sortBy);
 
       }else{
-          this.query= this.query.sort('-years')
+          this.query= this.query.sort('name')
       }
       return this
   };
