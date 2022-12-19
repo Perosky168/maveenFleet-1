@@ -13,7 +13,7 @@ module.exports = class Email {
 
     newTransport(){
         console.log(!process.env.NODE_ENV)
-        if (process.env.NODE_ENV==='production') {
+        if (process.env.MODE==='production') {
             console.log('...setting up mail')
             // Sendgrid
             return nodemailer.createTransport({
@@ -56,7 +56,19 @@ module.exports = class Email {
     }
 
     async sendWelcome(){
-        await this.send('welcome', 'Welcome to mavenFleet')
+        await this.send('welcome', 'Welcome to mooveX')
     }
+
+    async sendPasswordReset(){
+        await this.send('passwordReset',
+            `click the button below, Your password reset token is valid for only 10 minutes \n
+            if you did not request to change password ignore this`
+        )
+    }
+
+    async sendPasswordChanged(){
+        await this.send('passwordChanged', 'Your Password has been changed sucessfully')
+
+    };
 
 }
