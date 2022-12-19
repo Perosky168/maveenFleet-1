@@ -11,7 +11,7 @@ router.route('/admin/login').post(authController.login)
 //Protected Routes
 router.use(authController.protect,authController.restrictTo('admin'))
 router.route('/analytics').get(adminController.analyticsLog)
-router.route('/all-users').get(adminController.getAllUSers)
+router.route('/all-users').get(adminController.getAllUsers)
 router.route('/user/:id').get(adminController.getOneUser)
 router.route('/admin/update-profile').patch(adminController.updateAdmin)
 router.route('/admin/delete/:id').delete(adminController.deleteAdmin)
