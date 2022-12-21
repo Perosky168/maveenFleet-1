@@ -105,13 +105,19 @@ exports.analyticsLog= catchAsync(async(req, res, next)=>{
     const jwt= new google.auth.JWT(key.client_email, null, key.private_key.replace(/\\n/g, "\n"),scopes)
 
     const view_id= 279731425
-    google.options({auth:jwt})
+    // google.options({auth:jwt})
     const result= await google.analytics('v3').data.ga.get({
-      // 'auth': jwt,
+      'auth': jwt,
       'ids': 'ga:'+ view_id,
       'start-date': '30daysAgo',
       'end-date':'today',
-      'metrics': 'ga:pageviews'
+      'metrics': 'ga:sessions,ga:users,ga:pageviews'
+    },
+    (err, response) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
     });
 
 
