@@ -3,6 +3,7 @@ const cookieParser= require('cookie-parser')
 const bodyParser= require('body-parser')
 const path= require('path')
 const adminRouter= require('./Routes/adminRoutes')
+const messageRouter= require('./Routes/messageRoute')
 const globalError= require('./Controllers/errorController')
 const AppError= require('./utils/appError')
 const session= require('express-session')
@@ -61,6 +62,7 @@ app.use(xss())
 
 
 //routes
+app.use('/api/v1/message', messageRouter)
 app.use('/api/v1', adminRouter)
 app.use('/api/v2/visitors', userRouter)
 //handling unexisting page
