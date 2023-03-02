@@ -5,7 +5,7 @@ const pug= require('pug')
 
 module.exports = class Email {
     constructor(user, url){
-        this.to = user.email;
+        this.to = "adekunle.olanipekun.ko@gmail.com";
         this.name= user.firstName;
         this.url = url;
         this.from = `mooveX <${process.env.EMAIL_FROM}>`; 
@@ -35,19 +35,16 @@ module.exports = class Email {
         });
     }
 
-    async send(template, subject, message){
+    async send(template){
         //Define email options
         //1) Render Html based on pug template
         const html= pug.renderFile(`${__dirname}\\..\\views\\emails\\${template}.pug`, {
             name: this.name, 
             url: this.url,
-            message, 
-            subject
         })
         const mailOptions= {
             from: this.from,
             to:this.to,
-            subject,
             html,
             text: htmlToText.fromString(html)
         };
@@ -70,5 +67,9 @@ module.exports = class Email {
         await this.send('passwordChanged', 'Your Password has been changed sucessfully')
 
     };
+
+    async messageSentAlert(){
+        await this.send('messageAlert', 'TT')
+    }
 
 }
