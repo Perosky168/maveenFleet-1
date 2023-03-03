@@ -11,7 +11,7 @@ mongoose.connect(DB, {
     useUnifiedTopology: true
 }).then(()=> console.log('DB connection successful'))
 
-const server= app.listen(8000, ()=>{
+const server= app.listen(process.env.PORT, ()=>{
     console.log(process.env.MODE)
     console.log('Running on port 8000...')
 });
