@@ -12,8 +12,8 @@ const rateLimit= require('express-rate-limit')
 const xss= require('xss-clean')
 const mongoSanitize= require('express-mongo-sanitize')
 const userRouter= require('./Routes/userRoutes')
-const cmpressor = require('compression')
 const compression = require('compression')
+const cors= require('cors')
 
 const app= express();
 app.use(cookieParser())
@@ -41,7 +41,7 @@ app.set('views', path.join(__dirname, 'views'))
 //serving static files
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(cors())
 
 
 //set security HTTP headers
