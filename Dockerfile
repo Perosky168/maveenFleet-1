@@ -1,4 +1,4 @@
-FROM node:17
+FROM node:latest
 #working Dir 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN npm install
 #Copy Source Files 
 COPY . /app
 
-EXPOSE 3000
+EXPOSE 8000
 
 CMD ["npm", "start"]
 

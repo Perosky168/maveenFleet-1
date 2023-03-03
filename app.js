@@ -12,10 +12,16 @@ const rateLimit= require('express-rate-limit')
 const xss= require('xss-clean')
 const mongoSanitize= require('express-mongo-sanitize')
 const userRouter= require('./Routes/userRoutes')
+const cmpressor = require('compression')
+const compression = require('compression')
 
 const app= express();
 app.use(cookieParser())
 
+//implementing body parser to reead req.body
+app.use(bodyParser.json());
+
+app.use(compression())
 
 app.use((req,res,next)=>{
     req.requestTime= new Date().toISOString();
@@ -25,8 +31,6 @@ app.use((req,res,next)=>{
 //implemnting sessions
 app.use(session({secret: 'adekunlesessionsecretdonttryitatall'}));
 
-//implementing body parser to reead req.body
-app.use(bodyParser.json());
 
 //setting up pug 
 

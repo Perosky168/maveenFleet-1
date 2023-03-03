@@ -37,7 +37,6 @@ const createSendToken = (user, statusCode, req, res) => {
     });
 
   }catch(err){
-    console.log(err)
       res.status(500).json({
         status: 'fail', 
         error: err.Error
