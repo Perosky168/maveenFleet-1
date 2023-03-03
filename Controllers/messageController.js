@@ -31,5 +31,14 @@ exports.deleteMessage= catchAsync(async (req,res,next)=>{
     res.status(200).json({
         status: "success",
     })
+});
+
+exports.getAllMessages= catchAsync(async(req,res,next)=>{
+    const messages= await Message.find();
+
+    res.status(200).json({
+        status:"success",
+        messages
+    })
 })
 
