@@ -5,7 +5,6 @@ const User= require('../Models/userModel')
 const AppError= require('../utils/appError')
 const  google= require('googleapis')
 const catchAsync = require('../utils/catchAsync');
-const key= require('../maveenfleet-analytics-3a72a8a90d82.json')
 
 
 
@@ -102,7 +101,7 @@ exports.analyticsLog= catchAsync(async(req, res, next)=>{
     const scopes= 'https://www.googleapis.com/auth/analytics.readonly'
     
     
-    const jwt= new google.auth.JWT(key.client_email, null, key.private_key.replace(/\\n/g, "\n"),scopes)
+    const jwt= new google.auth.JWT(process.env.client_email, null, process.env.private_key.replace(/\\n/g, "\n"),scopes)
 
     const view_id= 279731425
     // google.options({auth:jwt})
