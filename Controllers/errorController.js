@@ -35,6 +35,14 @@ const sendErrorDev= (err,res)=>{
         message: err.message,
         stack: err.stack
     })
+
+    console.error('ERROR 💥', err);
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message
+    });
+
+    
 };
 
 const sendProdErr= (err, res)=>{
@@ -55,7 +63,14 @@ const sendProdErr= (err, res)=>{
             status: 'error',
             message: 'Something went very wrong'
         })
-    };
+    }
+
+    if (err.isOperational) {
+      return res.status(err.statusCode).render('error', {
+        title: 'Something went wrong!',
+        msg: "Try Again"
+      });
+    }
 
 }
 
