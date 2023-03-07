@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema({
         enum: {
             values: ['joiners', 'intersted in partnership', 'Want to stay in touch']
         },
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
 });
 
 const User = mongoose.model('User', userSchema);
