@@ -9,7 +9,7 @@ router.route('/admin/sign-up').post(adminController.createAdmin)
 router.route('/admin/login').post(authController.login)
 
 //Protected Routes
-router.use(authController.protect, authController.restrictTo('admin'))
+// router.use(authController.protect, authController.restrictTo('admin'))
 router.route('/download/user-data').get(adminController.downloadUserdocument)
 router.route('/analytics').get(adminController.analyticsLog)
 router.route('/all-users').get(adminController.getAllUsers)
