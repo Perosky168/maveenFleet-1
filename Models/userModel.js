@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const now = Date.now();
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: new Date(now).toLocaleDateString()
     },
 });
 
